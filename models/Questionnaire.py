@@ -15,25 +15,25 @@ class Questionnaire(db.Entity):
     @staticmethod
     @db_session
     def get_questionnaire(keyword):
-        et = EntityTags.get(tag_value=keyword)
-        q = Questionnaire.get(tag=et)
-        q.load()
-        return q
+        q = select(q for q in Questionnaire if q.tag.tag_value == keyword)[:]
+        if len(q) == 0:
+            return None
+        return q[0]
 
     @staticmethod
     @db_session
     def select_all_questionnaires():
         q = select(p for p in Questionnaire)[:]
-        for x in range(0, len(q)):
-            q[x].questions.load()
-            q[x].tag.load()
+        for x in q:
+            x.questions.load()
+            x.tag.load()
         return q
 
     @staticmethod
     @db_session
     def select_all_questions(qstnnr_id):
-        # an array of questions
-        questions = select((qst.questions.question) for qst in Questionnaire if qst.id == qstnnr_id)[:]
+        # an array of question obj
+        questions = select((qst.questions) for qst in Questionnaire if qst.id == qstnnr_id)[:]
         return questions
 
     @staticmethod
