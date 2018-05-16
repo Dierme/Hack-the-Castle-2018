@@ -3,9 +3,8 @@ import os
 import time
 from fbmq import QuickReply, NotificationType
 from fbpage import page
-import models
 from models.all_models import *
-from app.Platform import FacebookPlatform
+from app.FacebookPlatform import FacebookPlatform
 
 USER_SEQ = {}
 CONFIDENCE_THRESHOLD = 0.5

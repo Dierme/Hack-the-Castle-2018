@@ -1,7 +1,7 @@
 # coding: utf-8
 import os
 from flask import Flask, request, send_from_directory, render_template, redirect, url_for, session
-import messenger as pltfm
+from messenger import received_message, received_authentication, received_echo
 from config import CONFIG
 from fbpage import page
 from forms.create_forms import *

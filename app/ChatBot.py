@@ -2,6 +2,7 @@ from app.Platform import Platform
 from models.State import State
 from models.Participant import Participant
 
+
 class Chatbot:
     def __init__(self, platform: Platform):
         self.pltfm = platform
