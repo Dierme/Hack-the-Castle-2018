@@ -7,7 +7,9 @@ db = DataBase.get_database()
 class EntityTags(db.Entity):
     id = PrimaryKey(int, auto=True)
     tag_value = Required(str)
-    expressions = Required(str)
+    buildin = Required(bool, default=False)
+    expressions = Optional(str)
+    lookup = Optional(str)
     info = Optional('Info')
     qstnnr = Optional('Questionnaire')
 
@@ -19,12 +21,17 @@ class EntityTags(db.Entity):
 
     @staticmethod
     @db_session
-    def select_entitytag(_id):
-        et = EntityTags[_id]
-        return EntityTags[_id]
+    def select_entitytag(_id=None, tag_value=None):
+        if _id is not None:
+            return EntityTags[_id]
+
+        if tag_value is not None:
+           return EntityTags.get(tag_value=tag_value)
+
+        raise Exception('id or tagvalue must be provided')
 
     @staticmethod
     @db_session
-    def create_entitytag(tv, exprs):
-        et = EntityTags(tag_value=tv, expressions=exprs)
+    def create_entitytag(tag_value, exprs, buildin, lookup=''):
+        et = EntityTags(tag_value=tag_value, expressions=exprs, buildin=buildin, lookup=lookup)
         return et

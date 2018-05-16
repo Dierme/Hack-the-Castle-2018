@@ -1,4 +1,6 @@
 import requests
+from urllib.parse import quote
+import json
 
 
 class HttpClient:
@@ -21,10 +23,15 @@ class HttpClient:
             body=res.content,
         ))
 
+    @staticmethod
+    def _decode_resp_cont(response):
+        return json.loads(response.content.decode())
+
 
 class WitClient(HttpClient):
     base_url = 'https://api.wit.ai'
     version = '20170307'
+    debug = 0
 
     def __init__(self, token):
         self.token = token
@@ -43,7 +50,10 @@ class WitClient(HttpClient):
         data = {'id': entity_id}
         header = self._get_header()
         response = requests.post(url=url, json=data, headers=header)
-        WitClient.print_response(response)
+
+        if WitClient.debug:
+            WitClient.print_response(response)
+
         return response.status_code
 
     def create_sample(self, entity_id, exprs):
@@ -61,6 +71,29 @@ class WitClient(HttpClient):
         url = WitClient._apply_version(WitClient.base_url + '/samples')
         header = self._get_header()
         response = requests.post(url=url, json=data, headers=header)
-        WitClient.print_response(response)
+
+        if WitClient.debug:
+            WitClient.print_response(response)
+
         return response.status_code
+
+    def get_entities(self):
+        url = WitClient._apply_version(WitClient.base_url + '/entities')
+        header = self._get_header()
+        response = requests.get(url=url, headers=header)
+
+        if WitClient.debug:
+            WitClient.print_response(response)
+
+        return WitClient._decode_resp_cont(response)
+
+    def get_entity(self, entity_id):
+        url = WitClient._apply_version(WitClient.base_url + quote('/entities/{}'.format(entity_id)))
+        header = self._get_header()
+        response = requests.get(url=url, headers=header)
+
+        if WitClient.debug:
+            WitClient.print_response(response)
+
+        return WitClient._decode_resp_cont(response)
 

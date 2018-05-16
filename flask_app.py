@@ -8,6 +8,7 @@ from forms.create_forms import *
 from models.all_models import *
 from WitClient import WitClient
 from models.DataBase import DataBase
+from Controllers.EntityController import EntityController
 
 DataBase.generate()
 app = Flask(__name__)
@@ -17,6 +18,17 @@ app.config.update(dict(
 ))
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.sys.path.insert(0, parentdir)
+
+
+@app.route('/entity')
+def entity():
+    return 'one'
+
+
+@app.route('/sync')
+def sync():
+    data = EntityController.sync()
+    return 'one'
 
 
 @app.route('/index')
