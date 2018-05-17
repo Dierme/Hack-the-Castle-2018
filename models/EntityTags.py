@@ -11,7 +11,7 @@ class EntityTags(db.Entity):
     expressions = Optional(str)
     values = Optional(str)
     lookup = Optional(str)
-    info = Optional('Info')
+    info = Set('Info')
     qstnnr = Optional('Questionnaire')
 
     # ---- Query

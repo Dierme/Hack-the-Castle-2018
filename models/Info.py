@@ -8,7 +8,7 @@ db = DataBase.get_database()
 
 class Info(db.Entity):
     id = PrimaryKey(int, auto=True)
-    tag = Required('EntityTags')
+    tag = Optional('EntityTags')
 
     # The type of object user is asking for. Ex. place, material, abstract, company
     value = Optional(str)
