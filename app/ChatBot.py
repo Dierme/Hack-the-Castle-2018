@@ -119,6 +119,9 @@ class Chatbot:
 
     def resolve_greetings(self, message_text):
         if 'greetings' in self.sentance_meaning:
+            if 'bye' in self.sentance_meaning:
+                if self.sentance_meaning['bye']['confidence'] > self.sentance_meaning['greetings']['confidence']:
+                    return False
             greetings = ['Greetings!',
                          'Hello, Hello!',
                          'Nice to see you',
@@ -131,6 +134,9 @@ class Chatbot:
 
     def resolve_bye(self, message_text):
         if 'bye' in self.sentance_meaning:
+            if 'greetings' in self.sentance_meaning:
+                if self.sentance_meaning['greetings']['confidence'] > self.sentance_meaning['bye']['confidence']:
+                    return False
             greetings = ['See ya!',
                          'Have a great day!',
                          'All the best to you',
