@@ -1,6 +1,7 @@
 from app.Platform import Platform
 from models.State import State
 from models.Info import Info
+from models.EntityTags import EntityTags
 from models.Participant import Participant
 import json
 
@@ -46,14 +47,16 @@ class Chatbot:
 
                 if 'object' in self.sentance_meaning:
                     word = self.get_word(message_text, 'object')
+                    # values = json.loads(EntityTags.select_entitytag(tag_value='object').values)
 
-                    obj_types = {
-                        'company': Info.get_info(entity_name='object', value='company'),
-                        'place': Info.get_info(entity_name='object', value='place'),
-                        'abstract': Info.get_info(entity_name='object', value='abstract'),
-                        'person': Info.get_info(entity_name='object', value='person'),
-                    }
-                    info = obj_types.get(self.sentance_meaning['object']['value'], None)
+                    # obj_types = {
+                    #     'company': Info.get_info(entity_name='object', value='company'),
+                    #     'place': Info.get_info(entity_name='object', value='place'),
+                    #     'abstract': Info.get_info(entity_name='object', value='abstract'),
+                    #     'person': Info.get_info(entity_name='object', value='person'),
+                    # }
+
+                    info = Info.get_info(entity_name='object', value=self.sentance_meaning['object']['value'])
 
                     if info is not None:
                         response_text = info.info_text
