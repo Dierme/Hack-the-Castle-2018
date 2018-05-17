@@ -48,22 +48,22 @@ class Chatbot:
                     word = self.get_word(message_text, 'object')
 
                     obj_types = {
-                        'company': Info.get_info(entity_name='object', value='company', keyword=word),
-                        'place': Info.get_info(entity_name='object', value='place', keyword=word),
-                        'abstract': Info.get_info(entity_name='object', value='abstract', keyword=word),
-                        'person': Info.get_info(entity_name='object', value='person', keyword=word),
+                        'company': Info.get_info(entity_name='object', value='company'),
+                        'place': Info.get_info(entity_name='object', value='place'),
+                        'abstract': Info.get_info(entity_name='object', value='abstract'),
+                        'person': Info.get_info(entity_name='object', value='person'),
                     }
                     info = obj_types.get(self.sentance_meaning['object']['value'], None)
 
                     if info is not None:
                         response_text = info.info_text
                     else:
-                        response_text += 'Sorry, I have no information about that ' + self.sentance_meaning['object']
+                        response_text = 'Sorry, I have no information about ' + word
 
                 else:
                     response_text = 'Sorry, but i did not understood what are you asking for'
             else:
-                response_text += 'This is not a request'
+                response_text = 'This is not a request'
             self.pltfm.send_message(sender_id, response_text)
 
 

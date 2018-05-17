@@ -11,7 +11,7 @@ class EntityTagForm(Form):
 class InfoForm(Form):
     tag_id = IntegerField('Category', validators=[DataRequired()])
     info_text = StringField('Text', validators=[DataRequired()])
-
+    type = StringField('Text', validators=[DataRequired()])
 
 class QuestionForm(Form):
     qstnnr_id = IntegerField('Category', validators=[DataRequired()])

@@ -11,10 +11,7 @@ class Info(db.Entity):
     tag = Required('EntityTags')
 
     # The type of object user is asking for. Ex. place, material, abstract, company
-    type = Optional(str)
-
-    #The specific objetc user is asking for. Ex: Cetrez, love, stage, room, toilet
-    name = Optional(str)
+    value = Optional(str)
 
     info_text = Required(str)
 
@@ -28,19 +25,19 @@ class Info(db.Entity):
 
     @staticmethod
     @db_session
-    def get_info(entity_name, value, keyword):
+    def get_info(entity_name, value):
         et = EntityTags.get(tag_value=entity_name)
         if et is not None:
             et_values = json.loads(et.values)
             if value in et_values:
-                i = Info.get(tag=et, type=value, name=keyword)
+                i = Info.get(tag=et, type=value)
                 return i
             return None
         return None
 
     @staticmethod
     @db_session
-    def create_info(tag_id, info_text):
+    def create_info(tag_id, value, info_text):
         et = EntityTags.select_entitytag(tag_id)
-        i = Info(tag=et, info_text=info_text)
+        i = Info(tag=et, value=value, info_text=info_text)
         return i

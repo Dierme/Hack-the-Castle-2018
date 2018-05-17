@@ -166,7 +166,7 @@ def add_info():
     if request.method == 'POST':
         if form.validate_on_submit():
             # adding info to db
-            Info.create_info(form.tag_id.data, form.info_text.data)
+            Info.create_info(tag_id=form.tag_id.data, info_text=form.info_text.data, value=form.type.data)
             return redirect(url_for('info'))
 
     # display add-info form
