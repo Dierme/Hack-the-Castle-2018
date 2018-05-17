@@ -1,7 +1,7 @@
 from app.Platform import Platform
 from models.State import State
 from models.Participant import Participant
-
+import json
 
 class Chatbot:
     def __init__(self, platform: Platform):
@@ -32,7 +32,10 @@ class Chatbot:
                 return
 
             for ent, data in entities.items():
-                self.sentance_meaning[entities] = data[0]
+                self.sentance_meaning[entities] = data
+                print(json.dumps(data))
+                self.pltfm.send_message(sender_id, "Printed data")
+            return
 
             # Now parsing sentence meaning
             if self.sentance_meaning['request']:
