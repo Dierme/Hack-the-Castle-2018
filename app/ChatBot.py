@@ -32,10 +32,10 @@ class Chatbot:
                 return
 
             for ent, data in entities.items():
-                self.sentance_meaning[entities] = data
-                print(json.dumps(data))
-                self.pltfm.send_message(sender_id, "Printed data")
-            return
+                self.sentance_meaning[ent] = data[0]
+            #     print(json.dumps(data))
+            #     self.pltfm.send_message(sender_id, "Printed data")
+            # return
 
             # Now parsing sentence meaning
             if self.sentance_meaning['request']:
