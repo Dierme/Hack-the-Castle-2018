@@ -1,9 +1,7 @@
 from app.Platform import Platform
 from models.State import State
 from models.Info import Info
-from models.EntityTags import EntityTags
 from models.Participant import Participant
-import json
 import random
 
 
@@ -36,9 +34,6 @@ class Chatbot:
 
             for ent, data in entities.items():
                 self.sentance_meaning[ent] = data[0]
-            #     print(json.dumps(data))
-            #     self.pltfm.send_message(sender_id, "Printed data")
-            # return
 
             response_text = ''
 
@@ -68,37 +63,6 @@ class Chatbot:
             # TODO: remove when working with questionnaire
             self.pltfm.send_message(sender_id, "We should never really come here")
 
-            # State is not None
-            # Current msg from user concidered as questionnaire answer
-            # State contains info on last q asked
-
-            # If State q_numb == 0, it should be handled by callback function
-            # Execution here could indicate a bug. Deleting state to avoid getting stuck
-            # if current_state.q_numb == 0:
-            #     State.delete_state(event.sender_id)
-            #     return
-
-            # retrieve relevant questions
-            # questions = get_questions(current_state.qstnnr.id)
-            # questions = Questionnaire.select_all_questions(current_state.qstnnr.id)
-            #
-            # last_question_id = questions[current_state.q_numb].id
-            #
-            # # Save answer to DB.
-            # answer = event.message.get("text")
-            # Feedback.create_feedback(last_question_id, event.sender_id, answer)
-            #
-            # # Iterate state
-            # current_state = State.inc_state(event.sender_id)
-            #
-            # # Ask next question or thank user
-            #
-            # if current_state.q_numb >= len(questions):
-            #     page.send(event.sender_id, "Thank you")
-            #     State.delete_state(event.sender_id)
-            # else:
-            #     page.send(event.sender_id, questions[current_state.q_numb].question)
-
     def get_word(self, message, entity_key):
         start = self.sentance_meaning[entity_key]['_start']
         finish = self.sentance_meaning[entity_key]['_end']
@@ -120,7 +84,7 @@ class Chatbot:
     def resolve_greetings(self, message_text):
         if 'greetings' in self.sentance_meaning:
             if 'bye' in self.sentance_meaning:
-                if self.sentance_meaning['bye']['confidence'] > self.sentance_meaning['greetings']['confidence']:
+                if self.sentance_meaning['bye']['confidence'] > self.sentance_meaning['greetings']['confidence']
                     return False
             greetings = ['Greetings!',
                          'Hello, Hello!',
