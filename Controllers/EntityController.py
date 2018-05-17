@@ -20,7 +20,14 @@ class EntityController:
 
             et = EntityTags.select_entitytag(tag_value=data['name'])
             if et is None:
-                EntityTags.create_entitytag(tag_value=data['name'], exprs=json.dumps(data['values']),
-                                        buildin=data['builtin'], lookup='/'.join(data['lookups']))
+                values = []
+                expressions = []
+                for v in data['values']:
+                    values.append(v['value'])
+                    expressions.append(v['expressions'])
+
+                EntityTags.create_entitytag(tag_value=data['name'], exprs=json.dumps(expressions),
+                                            buildin=data['builtin'], lookup='/'.join(data['lookups']),
+                                            values=json.dumps(values))
 
         return 0

@@ -1,6 +1,7 @@
 from pony.orm import *
 from models.DataBase import DataBase
 from models.EntityTags import EntityTags
+import json
 
 db = DataBase.get_database()
 
@@ -8,6 +9,13 @@ db = DataBase.get_database()
 class Info(db.Entity):
     id = PrimaryKey(int, auto=True)
     tag = Required('EntityTags')
+
+    # The type of object user is asking for. Ex. place, material, abstract, company
+    type = Optional(str)
+
+    #The specific objetc user is asking for. Ex: Cetrez, love, stage, room, toilet
+    name = Optional(str)
+
     info_text = Required(str)
 
     @staticmethod
@@ -20,11 +28,14 @@ class Info(db.Entity):
 
     @staticmethod
     @db_session
-    def get_info(keyword):
-        et = EntityTags.get(tag_value=keyword)
+    def get_info(entity_name, value, keyword):
+        et = EntityTags.get(tag_value=entity_name)
         if et is not None:
-            i = Info.get(tag=et)
-            return i
+            et_values = json.loads(et.values)
+            if value in et_values:
+                i = Info.get(tag=et, type=value, name=keyword)
+                return i
+            return None
         return None
 
     @staticmethod

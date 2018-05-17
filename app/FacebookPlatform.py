@@ -78,7 +78,7 @@ class FacebookPlatform(Platform):
             FacebookPlatform.USER_SEQ[seq_id] = seq
 
         chatbot = Chatbot(self)
-        chatbot.receive(nlp['entities'], sender_id)
+        chatbot.receive(nlp['entities'], message_text, sender_id)
 
     def get_user_profile(self, user_id):
         return self.page.get_user_profile(fb_user_id=user_id)

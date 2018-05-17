@@ -9,6 +9,7 @@ class EntityTags(db.Entity):
     tag_value = Required(str)
     buildin = Required(bool, default=False)
     expressions = Optional(str)
+    values = Optional(str)
     lookup = Optional(str)
     info = Optional('Info')
     qstnnr = Optional('Questionnaire')
@@ -32,6 +33,6 @@ class EntityTags(db.Entity):
 
     @staticmethod
     @db_session
-    def create_entitytag(tag_value, exprs, buildin, lookup=''):
-        et = EntityTags(tag_value=tag_value, expressions=exprs, buildin=buildin, lookup=lookup)
+    def create_entitytag(tag_value, values, exprs, buildin, lookup=''):
+        et = EntityTags(tag_value=tag_value, expressions=exprs, values=values, buildin=buildin, lookup=lookup)
         return et

@@ -1,5 +1,6 @@
 from app.Platform import Platform
 from models.State import State
+from models.Info import Info
 from models.Participant import Participant
 import json
 
@@ -16,10 +17,11 @@ class Chatbot:
             participant = Participant.create_participant(name, user_id)
         return participant
 
-    def receive(self, entities, sender_id):
+
+
+    def receive(self, entities, message_text, sender_id):
         # Put new participants in DB
         self.log_user(sender_id)
-
         # Determine state
         current_state = State.get_state(sender_id)
         # print("current_state == None {}".format(current_state is None))
@@ -37,15 +39,33 @@ class Chatbot:
             #     self.pltfm.send_message(sender_id, "Printed data")
             # return
 
-            # Now parsing sentence meaning
-            if 'request' in self.sentance_meaning:
-                self.pltfm.send_message(sender_id, "You asking me for something")
-                return
+            response_text = ''
 
-            if 'company' in self.sentance_meaning:
-                data = self.sentance_meaning['company']
-                self.pltfm.send_message(sender_id, "You asking me for {}".format(data['value']))
-                return
+            # classify intent
+            if 'request' in self.sentance_meaning:
+
+                if 'object' in self.sentance_meaning:
+                    word = self.get_word(message_text, 'object')
+
+                    obj_types = {
+                        'company': Info.get_info(entity_name='object', value='company', keyword=word),
+                        'place': Info.get_info(entity_name='object', value='place', keyword=word),
+                        'abstract': Info.get_info(entity_name='object', value='abstract', keyword=word),
+                        'person': Info.get_info(entity_name='object', value='person', keyword=word),
+                    }
+                    info = obj_types.get(self.sentance_meaning['object']['value'], None)
+
+                    if info is not None:
+                        response_text = info.info_text
+                    else:
+                        response_text += 'Sorry, I have no information about that ' + self.sentance_meaning['object']
+
+                else:
+                    response_text = 'Sorry, but i did not understood what are you asking for'
+            else:
+                response_text += 'This is not a request'
+            self.pltfm.send_message(sender_id, response_text)
+
 
             # else:
 
@@ -54,7 +74,7 @@ class Chatbot:
             # if info is not None:
             #     bot_reply_info(event, info, keyword)
             # else:
-            self.pltfm.send_message(sender_id, "I'm sorry, but I have no information for you")
+            # self.pltfm.send_message(sender_id, "I'm sorry, but I have no information for you")
         else:
             # TODO: remove when working with questionnaire
             self.pltfm.send_message(sender_id, "We should never really come here")
@@ -89,6 +109,10 @@ class Chatbot:
             #     State.delete_state(event.sender_id)
             # else:
             #     page.send(event.sender_id, questions[current_state.q_numb].question)
+    def get_word(self, message, entity_key):
+        start = self.sentance_meaning[entity_key]['_start']
+        finish = self.sentance_meaning[entity_key]['_end']
+        return message[start:finish]
 
 
 # def bot_log_participant(fb_id):
