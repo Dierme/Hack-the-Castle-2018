@@ -6,6 +6,7 @@ from models.Participant import Participant
 class Chatbot:
     def __init__(self, platform: Platform):
         self.pltfm = platform
+        self.sentance_meaning = {}
 
     def log_user(self, user_id):
         participant = Participant.get_participant(user_id)
@@ -30,23 +31,18 @@ class Chatbot:
                 self.pltfm.send_message(sender_id, "I'm sorry, but I have failed to interpret you")
                 return
 
-            # Check if keyword should trigger questionnaire
-            # questionnaire = Questionnaire.get_questionnaire(keyword)
-            #
-            # if questionnaire is not None:
-            #     # Questionnaire is found, set state and retrieve questions
-            #     current_state = State.create_state(event.sender_id, questionnaire.id)
-            #     print("State created, qnnr={}".format(current_state.q_numb))
-            #     # questions = get_questions(current_state.qstnnr.id)
-            #
-            #     # Get user confirmation that user is interested in questionnaire
-            #     # Could be solved by using State 0 to trigger quick_reply and never increment
-            #     #       from 0->1 unless callback is OK
-            #     # First question in Questionnaire contains text question to ask for participation
-            #
-            #     question = "Is it ok if I ask you a few questions about {}".format(questionnaire.title)
-            #     bot_ask_participation(event.sender_id, question)
-            #     # page.send(event.sender_id, questions[current_state.q_numb].question)
+            for ent, data in entities.items():
+                self.sentance_meaning[entities] = data[0]
+
+            # Now parsing sentence meaning
+            if self.sentance_meaning['request']:
+                self.pltfm.send_message(sender_id, "You asking me for something")
+                return
+
+            if self.sentance_meaning['company']:
+                data = self.sentance_meaning['company']
+                self.pltfm.send_message(sender_id, "You asking me for {}".format(data['value']))
+                return
 
             # else:
 

@@ -5,6 +5,7 @@ from app.ChatBot import Chatbot
 from app.Platform import Platform
 import json
 
+
 class FacebookPlatform(Platform):
     USER_SEQ = {}
 
