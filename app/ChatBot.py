@@ -18,8 +18,6 @@ class Chatbot:
             participant = Participant.create_participant(name, user_id)
         return participant
 
-
-
     def receive(self, entities, message_text, sender_id):
         # Put new participants in DB
         self.log_user(sender_id)
@@ -45,39 +43,15 @@ class Chatbot:
             # classify intent
             if 'request' in self.sentance_meaning:
 
-                if 'object' in self.sentance_meaning:
-                    word = self.get_word(message_text, 'object')
-                    # values = json.loads(EntityTags.select_entitytag(tag_value='object').values)
+                response_text = self.resolve_object(message_text)
 
-                    # obj_types = {
-                    #     'company': Info.get_info(entity_name='object', value='company'),
-                    #     'place': Info.get_info(entity_name='object', value='place'),
-                    #     'abstract': Info.get_info(entity_name='object', value='abstract'),
-                    #     'person': Info.get_info(entity_name='object', value='person'),
-                    # }
-
-                    info = Info.get_info(entity_name='object', value=self.sentance_meaning['object']['value'])
-
-                    if info is not None:
-                        response_text = info.info_text
-                    else:
-                        response_text = 'Sorry, I have no information about ' + word
-
-                else:
-                    response_text = 'Sorry, but i did not understood what are you asking for'
             else:
                 response_text = 'This is not a request'
+
+            response_text = self.resolve_object(message_text)
+            response_text += "\n Ask nicely next time!"
+
             self.pltfm.send_message(sender_id, response_text)
-
-
-            # else:
-
-            # Info state
-            # info = Info.get_info(keyword)
-            # if info is not None:
-            #     bot_reply_info(event, info, keyword)
-            # else:
-            # self.pltfm.send_message(sender_id, "I'm sorry, but I have no information for you")
         else:
             # TODO: remove when working with questionnaire
             self.pltfm.send_message(sender_id, "We should never really come here")
@@ -112,10 +86,25 @@ class Chatbot:
             #     State.delete_state(event.sender_id)
             # else:
             #     page.send(event.sender_id, questions[current_state.q_numb].question)
+
     def get_word(self, message, entity_key):
         start = self.sentance_meaning[entity_key]['_start']
         finish = self.sentance_meaning[entity_key]['_end']
         return message[start:finish]
+
+    def resolve_object(self, message_text):
+        if 'object' in self.sentance_meaning:
+            info = Info.get_info(entity_name='object', value=self.sentance_meaning['object']['value'])
+            if info is not None:
+                response_text = info.info_text
+            else:
+                word = self.get_word(message_text, 'object')
+                response_text = 'Sorry, I have no information about ' + word
+
+        else:
+            response_text = 'Sorry, but i did not understood what are you asking for'
+        return response_text
+
 
 
 # def bot_log_participant(fb_id):
