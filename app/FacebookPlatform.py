@@ -3,7 +3,7 @@ import time
 from fbmq import QuickReply, NotificationType
 from app.ChatBot import Chatbot
 from app.Platform import Platform
-
+import json
 
 class FacebookPlatform(Platform):
     USER_SEQ = {}
@@ -55,7 +55,7 @@ class FacebookPlatform(Platform):
         nlp = message['nlp']
         keyword = None
         confidence = 0
-
+        print(json.dumps(nlp['entities']))
         # Get keywords from nlp
         if nlp is not None:
             # We're expecting only one item. Facebook dev settings, Built-In NLP
@@ -77,7 +77,7 @@ class FacebookPlatform(Platform):
             FacebookPlatform.USER_SEQ[seq_id] = seq
 
         chatbot = Chatbot(self)
-        chatbot.receive(nlp, sender_id)
+        chatbot.receive(nlp['entities'], sender_id)
 
     def get_user_profile(self, user_id):
         return self.page.get_user_profile(fb_user_id=user_id)

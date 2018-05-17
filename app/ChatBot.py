@@ -15,7 +15,7 @@ class Chatbot:
             participant = Participant.create_participant(name, user_id)
         return participant
 
-    def receive(self, nlp, sender_id):
+    def receive(self, entities, sender_id):
         # Put new participants in DB
         self.log_user(sender_id)
 
@@ -26,7 +26,7 @@ class Chatbot:
         if current_state is None:
             # Check if keyword is available and confidence is high enough'
             # TODO: Check that there is a keywork inside nlp
-            if not nlp:
+            if not entities:
                 self.pltfm.send_message(sender_id, "I'm sorry, but I have failed to interpret you")
                 return
 
