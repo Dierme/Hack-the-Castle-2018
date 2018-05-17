@@ -38,11 +38,11 @@ class Chatbot:
             # return
 
             # Now parsing sentence meaning
-            if self.sentance_meaning['request']:
+            if 'request' in self.sentance_meaning:
                 self.pltfm.send_message(sender_id, "You asking me for something")
                 return
 
-            if self.sentance_meaning['company']:
+            if 'company' in self.sentance_meaning:
                 data = self.sentance_meaning['company']
                 self.pltfm.send_message(sender_id, "You asking me for {}".format(data['value']))
                 return
