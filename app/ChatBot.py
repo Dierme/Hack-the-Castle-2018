@@ -121,7 +121,7 @@ class Chatbot:
         if 'greetings' in self.sentance_meaning:
             greetings = ['Greetings!',
                          'Hello, Hello!',
-                         'Nice to see you'
+                         'Nice to see you',
                          'Hey, hey!',
                          'Hi, user',
                          'I am super inelegance. Convey your wish, mortal.']
@@ -133,7 +133,7 @@ class Chatbot:
         if 'bye' in self.sentance_meaning:
             greetings = ['See ya!',
                          'Have a great day!',
-                         'All the best to you'
+                         'All the best to you',
                          'Bye!',
                          'Was nice talking to you',
                          'Hej då!']
