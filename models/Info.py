@@ -30,7 +30,7 @@ class Info(db.Entity):
         if et is not None:
             et_values = json.loads(et.values)
             if value in et_values:
-                i = Info.get(tag=et, type=value)
+                i = Info.get(tag=et, value=value)
                 return i
             return None
         return None
