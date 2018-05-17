@@ -4,6 +4,8 @@ from models.Info import Info
 from models.EntityTags import EntityTags
 from models.Participant import Participant
 import json
+import random
+
 
 class Chatbot:
     def __init__(self, platform: Platform):
@@ -42,11 +44,21 @@ class Chatbot:
 
             # classify intent
             if 'request' in self.sentance_meaning:
-
                 response_text = self.resolve_object(message_text)
-
+                self.pltfm.send_message(sender_id, response_text)
+                return
             else:
                 response_text = 'This is not a request'
+
+            response_text = self.resolve_greetings(message_text)
+            if response_text:
+                self.pltfm.send_message(sender_id, response_text)
+                return
+
+            response_text = self.resolve_bye(message_text)
+            if response_text:
+                self.pltfm.send_message(sender_id, response_text)
+                return
 
             response_text = self.resolve_object(message_text)
             response_text += "\n Ask nicely next time!"
@@ -105,7 +117,29 @@ class Chatbot:
             response_text = 'Sorry, but i did not understood what are you asking for'
         return response_text
 
+    def resolve_greetings(self, message_text):
+        if 'greetings' in self.sentance_meaning:
+            greetings = ['Greetings!',
+                         'Hello, Hello!',
+                         'Nice to see you'
+                         'Hey, hey!',
+                         'Hi, user',
+                         'I am super inelegance. Convey your wish, mortal.']
+            return random.choice(greetings)
+        else:
+            return False
 
+    def resolve_bye(self, message_text):
+        if 'bye' in self.sentance_meaning:
+            greetings = ['See ya!',
+                         'Have a great day!',
+                         'All the best to you'
+                         'Bye!',
+                         'Was nice talking to you',
+                         'Hej då!']
+            return random.choice(greetings)
+        else:
+            return False
 
 # def bot_log_participant(fb_id):
 #     participant = Participant.get_participant(fb_id)

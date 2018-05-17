@@ -14,8 +14,10 @@ class EntityController:
 
             # skipping default wit entities
             if entity[:3] == 'wit':
-                continue
-
+                if (entity[4:] == 'bye') or (entity[4:] == 'greetings') or (entity[4:] == 'datetime'):
+                    print(entity[4:])
+                else:
+                    continue
             data = client.get_entity(entity)
 
             et = EntityTags.select_entitytag(tag_value=data['name'])
